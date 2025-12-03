@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.example.demo.app-debug-61:/raw_car_splash.json.flat",
+        "source": "com.example.demo.app-main-63:/raw/car_splash.json"
+    },
+    {
+        "merged": "/Users/simohammedjoubiti/.gradle/daemon/8.10/com.example.demo.app-debug-61:/mipmap_ic_launcher.png.flat",
+        "source": "/Users/simohammedjoubiti/.gradle/daemon/8.10/com.example.demo.app-main-63:/mipmap/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/simohammedjoubiti/.gradle/daemon/8.10/com.example.demo.app-debug-61:/raw_car_splash_.json.flat",
+        "source": "/Users/simohammedjoubiti/.gradle/daemon/8.10/com.example.demo.app-main-63:/raw/car_splash_.json"
+    },
+    {
+        "merged": "com.example.demo.app-debug-61:/raw_car_splash_.json.flat",
+        "source": "com.example.demo.app-main-63:/raw/car_splash_.json"
+    },
+    {
+        "merged": "/Users/simohammedjoubiti/.gradle/daemon/8.10/com.example.demo.app-debug-61:/raw_car_splash.json.flat",
+        "source": "/Users/simohammedjoubiti/.gradle/daemon/8.10/com.example.demo.app-main-63:/raw/car_splash.json"
+    },
+    {
+        "merged": "/Users/simohammedjoubiti/.gradle/daemon/8.10/com.example.demo.app-debug-61:/mipmap_img.png.flat",
+        "source": "/Users/simohammedjoubiti/.gradle/daemon/8.10/com.example.demo.app-main-63:/mipmap/img.png"
+    }
+]
