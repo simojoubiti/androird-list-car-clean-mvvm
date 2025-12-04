@@ -36,22 +36,8 @@ This project utilizes modern Android development tools and libraries:
 *   **Testing:** JUnit 4, MockK, Kotlin Coroutines Test
 
 ## 📂 Project Structure
-
-The project follows the **Clean Architecture** principles, separating concerns into three main layers:
-com.example.demo
-├── data                # Data Layer: Network & Repository Implementation
-│   ├── remote          # API Interfaces and DTOs
-│   └── repository      # Repository Implementation (CarRepositoryImpl)
-├── di                  # Dependency Injection Modules (Hilt)
-├── domain              # Domain Layer: Business Logic (Pure Kotlin)
-│   ├── model           # Domain Models (Car)
-│   ├── repository      # Repository Interfaces
-│   └── usecase         # Use Cases (GetCarsUseCase)
-└── presentation        # UI Layer: Compose & ViewModels
-    ├── carlist         # Main Screen & ViewModel
-    ├── navigation      # Navigation Graph
-    ├── splash          # Lottie Splash Screen
-    └── ui.theme        # Theme & Color definitions
+The project follows the Clean Architecture principles, separating concerns into three main layers:
+![strecture.png](doc/strecture.png)
 
 ## 🚀 Getting Started
 
