@@ -1,14 +1,30 @@
 package com.example.demo.presentation.carlist
-
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,28 +43,45 @@ import com.example.demo.domain.model.Car
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
+/**
+ * The main screen responsible for displaying a list of cars.
+ *
+ * This Composable observes the [CarListViewModel] state and renders the UI accordingly.
+ * It handles three main states: Loading, Error, and Success (displaying the list).
+ * It also integrates Swipe-to-Refresh functionality to reload data.
+ *
+ * @param onCarClick Callback function triggered when a car card is clicked.
+ * @param viewModel The ViewModel that holds the business logic and UI state.
+ *                  Injected automatically via Hilt.
+ * @author JOUBITI MOHAMMED
+ */
 @Composable
 fun CarListScreen(
     onCarClick: (Car) -> Unit,
     viewModel: CarListViewModel = hiltViewModel()
 ) {
+    // Collect the UI state and refreshing state from the ViewModel flows
     val uiState by viewModel.uiState.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
+    // Setup state for the SwipeRefresh component
     val refreshState = rememberSwipeRefreshState(isRefreshing)
-    viewModel.loadCars("renault")
 
+    // Initial load trigger (Note: Ideally this should be in a LaunchedEffect to prevent repeated calls)
+    viewModel.loadCars("renault")
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color(0xFFF7F7F7)
+        color = Color(0xFFF7F7F7) // Light gray background
     ) {
+        // Wrap content in SwipeRefresh to allow pull-down-to-refresh behavior
         SwipeRefresh(
             state = refreshState,
             onRefresh = { viewModel.refresh("renault") },
             modifier = Modifier.fillMaxSize()
         ) {
             when (uiState) {
+                // State 1: Data is loading
                 is CarListUiState.Loading -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -58,6 +91,7 @@ fun CarListScreen(
                     }
                 }
 
+                // State 2: An error occurred during fetching
                 is CarListUiState.Error -> {
                     val message = (uiState as CarListUiState.Error).message
                     Box(
@@ -74,6 +108,7 @@ fun CarListScreen(
                     }
                 }
 
+                // State 3: Data successfully loaded
                 is CarListUiState.Success -> {
                     val cars = (uiState as CarListUiState.Success).cars
                     LazyColumn(
@@ -82,6 +117,7 @@ fun CarListScreen(
                             .padding(horizontal = 24.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
+                        // Header Section
                         item {
                             Spacer(Modifier.height(16.dp))
                             TopBar()
@@ -105,6 +141,7 @@ fun CarListScreen(
                             Spacer(Modifier.height(12.dp))
                         }
 
+                        // List of Car Cards
                         items(cars) { car ->
                             CarCard(
                                 car = car,
@@ -112,6 +149,7 @@ fun CarListScreen(
                             )
                         }
 
+                        // Bottom padding
                         item { Spacer(Modifier.height(24.dp)) }
                     }
                 }
@@ -120,6 +158,10 @@ fun CarListScreen(
     }
 }
 
+/**
+ * Composable that renders the top application bar.
+ * Contains the menu icon and a placeholder user avatar.
+ */
 @Composable
 private fun TopBar() {
     Row(
@@ -127,6 +169,7 @@ private fun TopBar() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Menu Button
         Surface(
             modifier = Modifier.size(40.dp),
             shape = RoundedCornerShape(12.dp),
@@ -136,13 +179,14 @@ private fun TopBar() {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clickable { },
+                    .clickable { /* Handle menu click */ },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(Icons.Default.Menu, contentDescription = "Menu")
             }
         }
 
+        // User Avatar Placeholder
         Surface(
             modifier = Modifier.size(40.dp),
             shape = CircleShape,
@@ -151,6 +195,10 @@ private fun TopBar() {
     }
 }
 
+/**
+ * Composable for the search bar UI.
+ * Currently static (visual only).
+ */
 @Composable
 private fun SearchBar() {
     Surface(
@@ -169,7 +217,7 @@ private fun SearchBar() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Default.Menu,
+                imageVector = Icons.Default.Menu, // Should probably be a Search icon
                 contentDescription = null,
                 tint = Color.Gray
             )
@@ -183,24 +231,27 @@ private fun SearchBar() {
     }
 }
 
+/**
+ * Displays a horizontal row of car categories (brands).
+ *
+ * Allows the user to filter the list by clicking on a brand name.
+ *
+ * @param viewModel The ViewModel used to update the selected brand and reload data.
+ */
 @Composable
 private fun CategoryRow(
     viewModel: CarListViewModel
 ) {
-
-
-    val categories = listOf("Renault", "Ford", "Toyota", "Fiat","Audi")
-
+    val categories = listOf("Renault", "Ford", "Toyota", "Fiat", "Audi")
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
-
     ) {
         categories.forEachIndexed { index, label ->
 
-             val selected = viewModel.selectedBrandIndex == index
-
+            // Check if this category is currently selected
+            val selected = viewModel.selectedBrandIndex == index
 
             Surface(
                 shape = RoundedCornerShape(20.dp),
@@ -208,10 +259,10 @@ private fun CategoryRow(
                 border = if (selected) null else ButtonDefaults.outlinedButtonBorder,
                 tonalElevation = 0.dp,
                 modifier = Modifier.clickable {
+                    // Update selection and trigger data reload
                     viewModel.selectBrand(index)
                     viewModel.loadCars(label)
                 }
-
             ) {
                 Box(
                     modifier = Modifier
@@ -230,6 +281,12 @@ private fun CategoryRow(
     }
 }
 
+/**
+ * Renders a single card item representing a car.
+ *
+ * @param car The domain object containing car details.
+ * @param onClick Action to perform when the card is clicked.
+ */
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun CarCard(
@@ -244,13 +301,13 @@ fun CarCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(140.dp)
-
     ) {
         Row(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Left side: Text details
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -279,6 +336,7 @@ fun CarCard(
 
             Spacer(Modifier.width(10.dp))
 
+            // Right side: Car Image loaded via Glide
             GlideImage(
                 model = car.imageUrl,
                 contentDescription = car.name,
@@ -290,3 +348,4 @@ fun CarCard(
         }
     }
 }
+
