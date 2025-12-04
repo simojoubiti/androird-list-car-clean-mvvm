@@ -37,6 +37,7 @@ This project utilizes modern Android development tools and libraries:
 
 ## 📂 Project Structure
 The project follows the Clean Architecture principles, separating concerns into three main layers:
+
 ![strecture.png](doc/strecture.png)
 
 ## 🚀 Getting Started
@@ -73,5 +74,11 @@ This app consumes the **Car Query API**:
 *   Endpoint used: `getModels`
 
 *Note: Since the API only provides raw model names, the `CarRepositoryImpl` enriches the data with simulated prices, descriptions, and images for a better UI demonstration.*
+
+## 🎥 App Demo
+
+Check out the application in action, featuring the Splash Screen animation and the Pull-to-Refresh functionality:
+
+![App Demo](doc/demo.gif)
 
 
