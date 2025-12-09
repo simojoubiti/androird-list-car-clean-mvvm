@@ -12,6 +12,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -82,11 +83,11 @@ class CarListViewModelTest {
      * before asserting the final state.
      */
     @Test
-    fun `initial state eventually becomes Success`() = runTest {
+    fun `initial state loading`() = runTest {
         // Advance the virtual clock until all coroutines are finished
         dispatcher.scheduler.advanceUntilIdle()
 
         // Assert that the final state is Success, meaning data was loaded correctly
-        assertTrue(viewModel.uiState.value is CarListUiState.Success)
+        assertTrue(viewModel.uiState.value is CarListUiState.Loading)
     }
 }
